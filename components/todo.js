@@ -44,19 +44,20 @@ const Todo = () => {
 
   return (
     <Container
-      maxWidth="md"
+      maxWidth="sm" // Change to a smaller breakpoint like "sm"
       sx={{
-        mt: 4,
+        mt: 3, // Slightly reduce margin-top
         border: "1px solid #ccc",
         borderRadius: "8px",
-        padding: 2,
-        margin: { xs: 2, sm: 4 },
+        padding: { xs: 1, sm: 2 }, // Use responsive padding
+        margin: { xs: 1, sm: 2 }, // Use responsive margin
       }}
     >
       <Box component="form">
         <Grid container spacing={2}>
           <Grid size={{ xs: 12, sm: 6, md: 6 }}>
             <TextField
+              size="small"
               required
               label="Task Title"
               variant="filled"
@@ -76,6 +77,7 @@ const Todo = () => {
                 Priority *
               </InputLabel>
               <Select
+                size="small"
                 required
                 labelId="priority-select-filled-label"
                 id="priority-select-filled"
@@ -97,6 +99,7 @@ const Todo = () => {
             <FormControl variant="filled" fullWidth>
               <InputLabel id="status-select-filled-label">Status *</InputLabel>
               <Select
+                size="small"
                 required
                 labelId="status-select-filled-label"
                 id="status-select-filled"
@@ -116,10 +119,11 @@ const Todo = () => {
 
           <Grid size={{ xs: 12 }}>
             <TextField
+              size="small"
               required
               label="Description"
               multiline
-              rows={4}
+              rows={2}
               variant="filled"
               fullWidth
               error={errorInputDesc}
