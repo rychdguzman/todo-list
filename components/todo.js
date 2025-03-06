@@ -13,6 +13,7 @@ import {
   Alert,
 } from "@mui/material";
 import Grid from "@mui/material/Grid2";
+import SendIcon from "@mui/icons-material/Send";
 
 const Todo = () => {
   const [type, setType] = React.useState("");
@@ -24,33 +25,90 @@ const Todo = () => {
   const [errorInputStatus, setErrorInputStatus] = React.useState(false);
   const [errorInputDesc, setErrorInputDesc] = React.useState(false);
   const [errorInputType, setErrorInputType] = React.useState(false);
-  const [errorPopup, setErrorPopup] = React.useState(false);
+  const [errorInputPopup, setErrorInputPopup] = React.useState(false);
 
-  const validateField = (value, setError) => {
-    setError(value.trim() === "");
-  };
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [isErrorSubmit, setIsErrorSubmit] = React.useState(false);
+  const [isTaskExist, setIsTaskExist] = React.useState(false);
+  const [isSuccessSubmit, setIsSuccessSubmit] = React.useState(false);
 
-  const submitHandler = () => {
-    validateField(title, setErrorInputTitle);
-    validateField(type, setErrorInputType);
-    validateField(status, setErrorInputStatus);
-    validateField(description, setErrorInputDesc);
-    setErrorPopup(!title || !type || !status || !description);
+  const validateField = (value) => value.trim() === "";
+
+  const createNewTaskHandler = async (event) => {
+    event.preventDefault();
+
+    const isTitleInvalid = validateField(title);
+    const isTypeInvalid = validateField(type);
+    const isStatusInvalid = validateField(status);
+    const isDescriptionInvalid = validateField(description);
+
+    setErrorInputTitle(isTitleInvalid);
+    setErrorInputType(isTypeInvalid);
+    setErrorInputStatus(isStatusInvalid);
+    setErrorInputDesc(isDescriptionInvalid);
+
+    const isAnyFieldInvalid =
+      isTitleInvalid ||
+      isTypeInvalid ||
+      isStatusInvalid ||
+      isDescriptionInvalid;
+    setErrorInputPopup(isAnyFieldInvalid);
+
+    if (isAnyFieldInvalid) {
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      const response = await fetch("/api/task", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          title,
+          status,
+          category: type,
+          description,
+        }),
+      });
+
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 1000);
+
+      if (!response.ok && response.status === 409) {
+        setIsTaskExist(true);
+        return;
+      }
+      if (!response.ok) {
+        setIsErrorSubmit(true);
+        return;
+      }
+      setIsSuccessSubmit(true);
+      const data = await response.json();
+      console.log("Task created successfully:", data);
+    } catch (error) {
+      console.error("Error creating task:", error);
+    }
   };
 
   const handleClose = () => {
-    setErrorPopup(false);
+    setErrorInputPopup(false);
+    setIsErrorSubmit(false);
+    setIsSuccessSubmit(false);
+    setIsTaskExist(false);
   };
 
   return (
     <Container
-      maxWidth="sm" // Change to a smaller breakpoint like "sm"
+      maxWidth="sm"
       sx={{
-        mt: 3, // Slightly reduce margin-top
+        mt: 3,
         border: "1px solid #ccc",
         borderRadius: "8px",
-        padding: { xs: 1, sm: 2 }, // Use responsive padding
-        margin: { xs: 1, sm: 2 }, // Use responsive margin
+        padding: { xs: 1, sm: 2 },
+        margin: { xs: 1, sm: 2 },
       }}
     >
       <Box component="form">
@@ -66,7 +124,7 @@ const Todo = () => {
               value={title}
               onChange={(e) => {
                 setTitle(e.target.value);
-                validateField(e.target.value, setErrorInputTitle);
+                setErrorInputTitle(false);
               }}
             />
           </Grid>
@@ -84,7 +142,7 @@ const Todo = () => {
                 value={type}
                 onChange={(e) => {
                   setType(e.target.value);
-                  validateField(e.target.value, setErrorInputType);
+                  setErrorInputType(false);
                 }}
                 error={errorInputType}
               >
@@ -106,7 +164,7 @@ const Todo = () => {
                 value={status}
                 onChange={(e) => {
                   setStatus(e.target.value);
-                  validateField(e.target.value, setErrorInputStatus);
+                  setErrorInputStatus(false);
                 }}
                 error={errorInputStatus}
               >
@@ -130,7 +188,7 @@ const Todo = () => {
               value={description}
               onChange={(e) => {
                 setDescription(e.target.value);
-                validateField(e.target.value, setErrorInputDesc);
+                setErrorInputDesc(false);
               }}
             />
           </Grid>
@@ -139,15 +197,60 @@ const Todo = () => {
             size={{ xs: 12 }}
             sx={{ display: "flex", justifyContent: "flex-end" }}
           >
-            <Button variant="contained" onClick={submitHandler}>
+            {/* <Button variant="contained" onClick={createNewTaskHandler}>
+              Submit
+            </Button> */}
+            <Button
+              size="small"
+              onClick={createNewTaskHandler}
+              endIcon={<SendIcon />}
+              loading={isLoading}
+              loadingPosition="end"
+              variant="contained"
+            >
               Submit
             </Button>
           </Grid>
         </Grid>
       </Box>
-      <Snackbar open={errorPopup} autoHideDuration={5000} onClose={handleClose}>
+      <Snackbar
+        open={errorInputPopup}
+        autoHideDuration={3000}
+        onClose={handleClose}
+        anchorOrigin={{ vertical: "top", horizontal: "left" }}
+      >
         <Alert variant="filled" severity="error" sx={{ width: "100%" }}>
           Please fill out the required fields.
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        open={isErrorSubmit}
+        autoHideDuration={3000}
+        onClose={handleClose}
+        anchorOrigin={{ vertical: "top", horizontal: "left" }}
+      >
+        <Alert variant="filled" severity="error" sx={{ width: "100%" }}>
+          An error occured creating your task, please try again.
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        open={isTaskExist}
+        autoHideDuration={3000}
+        onClose={handleClose}
+        anchorOrigin={{ vertical: "top", horizontal: "left" }}
+      >
+        <Alert variant="filled" severity="error" sx={{ width: "100%" }}>
+          Task already exist.
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        open={isSuccessSubmit}
+        autoHideDuration={3000}
+        onClose={handleClose}
+        anchorOrigin={{ vertical: "top", horizontal: "left" }}
+      >
+        <Alert variant="filled" severity="success" sx={{ width: "100%" }}>
+          Task successfully created.
         </Alert>
       </Snackbar>
     </Container>
