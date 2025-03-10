@@ -3,33 +3,39 @@ import React from "react";
 import SplashCursor from "@/components/splashCursor";
 import Todo from "@/components/todo";
 import TodoList from "@/components/todoList";
-import { Box } from "@mui/material";
-import Image from "next/image";
+import { Box, Typography } from "@mui/material";
 
 export default function Home() {
+  const CenteredBox = ({ children }) => (
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        width: "100vw",
+      }}
+    >
+      {children}
+    </Box>
+  );
   return (
     <>
       <SplashCursor />
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          width: "100vw",
-        }}
-      >
+      <CenteredBox>
+        <Typography
+          variant="h4"
+          align="center"
+          sx={{ fontWeight: "bold", margin: "16px 0" }}
+        >
+          Task Tracker
+        </Typography>
+      </CenteredBox>
+      <CenteredBox>
         <Todo />
-      </Box>
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          width: "100vw",
-        }}
-      >
+      </CenteredBox>
+      <CenteredBox>
         <TodoList />
-      </Box>
+      </CenteredBox>
     </>
   );
 }

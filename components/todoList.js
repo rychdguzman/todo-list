@@ -73,7 +73,7 @@ const TodoList = () => {
                 <Divider sx={{ margin: "16px 0" }} />
                 <Box
                   sx={{
-                    maxHeight: "500px",
+                    maxHeight: "400px",
                     overflowY: "scroll",
                     padding: "8px",
                     "&::-webkit-scrollbar": {
