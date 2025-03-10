@@ -1,6 +1,7 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
 import { ThemeProvider } from "@mui/material/styles";
+import { TaskProvider } from "@/TaskProvider/TaskContetxt";
 import CssBaseline from "@mui/material/CssBaseline";
 import darkTheme from "./theme";
 
@@ -26,7 +27,7 @@ export default function RootLayout({ children }) {
         <AppRouterCacheProvider>
           <ThemeProvider theme={darkTheme}>
             <CssBaseline />
-            {children}
+            <TaskProvider>{children}</TaskProvider>
           </ThemeProvider>
         </AppRouterCacheProvider>
       </body>

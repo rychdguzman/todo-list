@@ -14,14 +14,18 @@ import {
 } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import SendIcon from "@mui/icons-material/Send";
+import { useTasks } from "@/TaskProvider/TaskContetxt";
 
 const Todo = () => {
+  const { addTask } = useTasks();
+
   const [type, setType] = React.useState("");
   const [status, setStatus] = React.useState("");
   const [description, setDescription] = React.useState("");
   const [title, setTitle] = React.useState("");
 
   const [errorInputTitle, setErrorInputTitle] = React.useState(false);
+  const [errorInputTitleExist, setErrorInputTitleExist] = React.useState(false);
   const [errorInputStatus, setErrorInputStatus] = React.useState(false);
   const [errorInputDesc, setErrorInputDesc] = React.useState(false);
   const [errorInputType, setErrorInputType] = React.useState(false);
@@ -34,62 +38,71 @@ const Todo = () => {
 
   const validateField = (value) => value.trim() === "";
 
-  const createNewTaskHandler = async (event) => {
-    event.preventDefault();
+  //Handles the submission of New Task
+  const createNewTaskHandler = async () => {
+    // Validate fields dynamically to reduce redundancy
+    const fields = {
+      title: validateField(title),
+      type: validateField(type),
+      status: validateField(status),
+      description: validateField(description),
+    };
 
-    const isTitleInvalid = validateField(title);
-    const isTypeInvalid = validateField(type);
-    const isStatusInvalid = validateField(status);
-    const isDescriptionInvalid = validateField(description);
+    // Update error states based on validation results
+    setErrorInputTitle(fields.title);
+    setErrorInputType(fields.type);
+    setErrorInputStatus(fields.status);
+    setErrorInputDesc(fields.description);
 
-    setErrorInputTitle(isTitleInvalid);
-    setErrorInputType(isTypeInvalid);
-    setErrorInputStatus(isStatusInvalid);
-    setErrorInputDesc(isDescriptionInvalid);
-
-    const isAnyFieldInvalid =
-      isTitleInvalid ||
-      isTypeInvalid ||
-      isStatusInvalid ||
-      isDescriptionInvalid;
+    // Check if any field is invalid
+    const isAnyFieldInvalid = Object.values(fields).some(
+      (isInvalid) => isInvalid
+    );
     setErrorInputPopup(isAnyFieldInvalid);
 
-    if (isAnyFieldInvalid) {
-      return;
-    }
+    if (isAnyFieldInvalid) return; // Exit early if validation fails
+
+    const newTask = {
+      title,
+      status,
+      category: type,
+      description,
+    };
 
     try {
       setIsLoading(true);
-      const response = await fetch("/api/task", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          title,
-          status,
-          category: type,
-          description,
-        }),
-      });
 
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 1000);
+      // Perform the API request
+      const response = await addTask(newTask);
 
-      if (!response.ok && response.status === 409) {
-        setIsTaskExist(true);
-        return;
-      }
       if (!response.ok) {
+        // Handle specific cases of error responses
+        if (response.status === 409) {
+          setIsTaskExist(true);
+          setErrorInputTitle(true); // Highlight the title as existing
+          setErrorInputTitleExist(true);
+          return;
+        }
+
+        // Generic error case
         setIsErrorSubmit(true);
         return;
       }
+
+      // Handle successful task creation
       setIsSuccessSubmit(true);
-      const data = await response.json();
-      console.log("Task created successfully:", data);
+
+      // Clear input fields after successful submission
+      setTitle("");
+      setType("");
+      setStatus("");
+      setDescription("");
     } catch (error) {
       console.error("Error creating task:", error);
+      setIsErrorSubmit(true); // Set generic error state
+    } finally {
+      // Always reset the loading state
+      setIsLoading(false);
     }
   };
 
@@ -122,9 +135,11 @@ const Todo = () => {
               fullWidth
               error={errorInputTitle}
               value={title}
+              helperText={errorInputTitleExist && "Task title already exist"}
               onChange={(e) => {
                 setTitle(e.target.value);
                 setErrorInputTitle(false);
+                setErrorInputTitleExist(false);
               }}
             />
           </Grid>
@@ -208,7 +223,7 @@ const Todo = () => {
               loadingPosition="end"
               variant="contained"
             >
-              Submit
+              Add Task
             </Button>
           </Grid>
         </Grid>
@@ -240,7 +255,7 @@ const Todo = () => {
         anchorOrigin={{ vertical: "top", horizontal: "left" }}
       >
         <Alert variant="filled" severity="error" sx={{ width: "100%" }}>
-          Task already exist.
+          Task already exist, please check on the list below.
         </Alert>
       </Snackbar>
       <Snackbar

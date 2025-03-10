@@ -1,3 +1,5 @@
+"use client";
+import React from "react";
 import SplashCursor from "@/components/splashCursor";
 import Todo from "@/components/todo";
 import TodoList from "@/components/todoList";
@@ -14,7 +16,6 @@ export default function Home() {
           justifyContent: "center",
           alignItems: "center",
           width: "100vw",
-          // height: "100vh",
         }}
       >
         <Todo />
@@ -25,7 +26,6 @@ export default function Home() {
           justifyContent: "center",
           alignItems: "center",
           width: "100vw",
-          // height: "100vh",
         }}
       >
         <TodoList />
