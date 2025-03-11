@@ -1,36 +1,68 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+Project Overview
+Technologies Used
+-Next.js: Version 15.2.1
+-Material-UI (MUI): UI Framework
+-Context API: For state management
+-MongoDB: Database solution
 
-## Getting Started
+Steps to Run the Project
 
-First, run the development server:
+Install Dependencies: Run the following command in the root directory of the project:
+bash
+-npm install
+Set Up Environment Variables:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+    Create a .env file in the root directory.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+    Add the following environment variable:
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+    env
+    MONGO_URI=<value will be provided via email>
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Start the Project:
+For development:
+bash
+-npm run dev
 
-## Learn More
+For production:
+bash
+-npm run build
+-npm start
 
-To learn more about Next.js, take a look at the following resources:
+Live Deployment
+A deployed version of this project is accessible at: https://todo-list-kappa-mauve.vercel.app/
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Project Requirements:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. Framework: Use the NextJS App Router framework.
+2. UI Components: Utilize MUI (Material-UI) components for the user interface: https://mui.com
+3. API Endpoints: Implement NextJS API endpoints to retrieve and save tasks.
+4. Storage: Any form of storage can be used to save tasks (e.g., local storage, a database, etc.).
+5. Responsiveness: Ensure the app is responsive across all devices and screen sizes.
+6. Form Validation:
+   ◦ When creating new tasks, validate to ensure tasks are not duplicated (use an async API call to check for duplicates).
+   ◦ Ensure tasks are not created with empty titles. 7. Validation Errors: Forms must display validation errors.
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Detailed Requirements 1. Framework
+• Set up a new NextJS project using the App Router framework.
+• Ensure the project structure follows NextJS conventions. 2. UI Components
+• Install and configure MUI (Material-UI) in the project.
+• Use MUI components for building the todo list interface, including forms, buttons, lists, and dialogs. 3. API Endpoints
+• Create NextJS API routes to handle CRUD operations for tasks.
+◦ GET /api/tasks: Retrieve all tasks.
+◦ POST /api/tasks: Create a new task.
+◦ PUT /api/tasks/:id: Update an existing task.
+◦ DELETE /api/tasks/:id: Delete a task. 4. Storage
+• Choose a storage solution for saving tasks. Options include:
+◦ Local storage (for a simple implementation).
+◦ A database (e.g., MongoDB, PostgreSQL) for a more robust solution.
+• Implement the necessary logic to interact with the chosen storage solution. 5. Responsiveness
+• Ensure the app is fully responsive using MUI’s responsive design features.
+• Test the app on various devices and screen sizes to ensure a consistent user experience. 6. Form Validation
+• Implement form validation to check for duplicate tasks and empty titles.
+◦ Use an async API call to check for duplicate tasks before creating a new task.
+◦ Ensure the task title is not empty before submission.
+• Use MUI’s form components and validation features to handle form validation. 7. Validation Errors
+• Display validation errors using MUI’s form error handling components.
+• Provide clear and user-friendly error messages for validation issues.
+Store the completed project in a public Github repository and provide a link to the repository for review

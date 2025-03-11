@@ -77,7 +77,7 @@ export async function DELETE(request, context) {
     const client = await MongoClient.connect(process.env.MONGO_URI);
     const db = client.db("TodoList");
 
-    const filter = { _id: new ObjectId(taskId) }; // Correctly use ObjectId with "new"
+    const filter = { _id: new ObjectId(taskId) };
 
     const result = await db.collection("Task").deleteOne(filter);
 

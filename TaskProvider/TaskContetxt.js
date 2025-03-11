@@ -33,11 +33,9 @@ export const TaskProvider = ({ children }) => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newTask),
       });
-      console.log(response);
-
+      // Refresh tasks after adding
       await fetchTasks();
       return response;
-      // Refresh tasks after adding
     } catch (error) {
       console.error("Error adding task:", error);
     }
@@ -51,8 +49,8 @@ export const TaskProvider = ({ children }) => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status: newStatus }),
       });
-      if (!response.ok) throw new Error("Error updating task");
-      await fetchTasks(); // Refresh tasks after updating
+      // Refresh tasks after updating
+      await fetchTasks();
       return response;
     } catch (error) {
       console.error("Error updating task:", error);
@@ -65,8 +63,8 @@ export const TaskProvider = ({ children }) => {
       const response = await fetch(`/api/task/${taskId}`, {
         method: "DELETE",
       });
-      if (!response.ok) throw new Error("Error deleting task");
-      await fetchTasks(); // Refresh tasks after deleting
+      // Refresh tasks after deleting
+      await fetchTasks();
       return response;
     } catch (error) {
       console.error("Error deleting task:", error);

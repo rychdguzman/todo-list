@@ -212,9 +212,6 @@ const Todo = () => {
             size={{ xs: 12 }}
             sx={{ display: "flex", justifyContent: "flex-end" }}
           >
-            {/* <Button variant="contained" onClick={createNewTaskHandler}>
-              Submit
-            </Button> */}
             <Button
               size="small"
               onClick={createNewTaskHandler}

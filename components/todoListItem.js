@@ -246,7 +246,6 @@ const TodoListItem = ({ data }) => {
                   display: "flex",
                   flexDirection: { xs: "column", sm: "row" },
                   alignItems: "flex-start",
-                  // gap: { xs: "0.5rem", sm: "01rem" },
                   justifyContent: "space-between",
                   width: "100%",
                 }}
@@ -285,9 +284,9 @@ const TodoListItem = ({ data }) => {
                 sx={{
                   display: "flex",
                   justifyContent:
-                    item.status === "Done" ? "flex-end" : "center", // Align buttons to the right
-                  gap: 2, // Add space between buttons
-                  marginTop: 2, // Add space between Typography and buttons
+                    item.status === "Done" ? "flex-end" : "center",
+                  gap: 2,
+                  marginTop: 2,
                 }}
               >
                 {actionList(item.status, item["_id"])}
